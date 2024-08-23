@@ -1,5 +1,4 @@
----
-name:  Checks 
+name: Checks
 
 on: [push]
 
@@ -13,10 +12,23 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install Docker Compose
+        run: |
+          DOCKER_COMPOSE_VERSION=1.29.2
+          sudo curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+        # Ensure Docker Compose is available
+        shell: bash
+
       - name: Test
         run: docker-compose run --rm app sh -c "python manage.py test"
+      
       - name: Lint
         run: docker-compose run --rm app sh -c "flake8"
-      
