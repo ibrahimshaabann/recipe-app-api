@@ -1,2 +1,3 @@
 # this is for requirements needed only for devlopments and not needen on deployment
-flake8>=3.9.2,<3.10
+flake8==3.9.2
+black==24.8.0

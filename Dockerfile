@@ -1,8 +1,14 @@
+# Declare the DEV build argument
+ARG DEV=false
+
 FROM python:3.9-alpine3.13
 
 LABEL maintainer="ibrahimshaaban"
 
 ENV PYTHONUNBUFFERED 1
+
+# Debug: Print the value of DEV to see if it's being passed
+RUN echo "DEV is set to $DEV"
 
 # Set up the working directory
 WORKDIR /app
@@ -16,9 +22,12 @@ RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     # Install development dependencies if DEV is true
-    if [ "$DEV" = "true" ]; then \
-        /py/bin/pip install -r /tmp/requirements.dev.txt; \
-    fi && \
+    # if [ "$DEV" = "true" ]; then \
+    #     echo "Installing development dependencies" && \
+    /py/bin/pip install -r /tmp/requirements.dev.txt; \
+    # else \
+    #     echo "Skipping development dependencies"; \
+    # fi && \
     rm -rf /tmp
 
 # Copy the application code
